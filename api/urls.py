@@ -37,10 +37,11 @@ router.register('sessions', SessionViewSet)
 router.register('reservations', ReservationViewSet)
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('token/', CustomTokenView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    # USER AND AUTH RELATED
+    path('user/register/', RegisterView.as_view(), name='register'),
+    path('user/token/', CustomTokenView.as_view(), name='token_obtain_pair'),
+    path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('user/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     
     *router.urls
 ]
