@@ -17,11 +17,16 @@ Including another URLconf
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView
 )
-from api.views import MovieViewSet, ReservationViewSet, SessionViewSet
+from api.views import (
+    MovieViewSet, 
+    ReservationViewSet, 
+    SessionViewSet, 
+    RegisterView, 
+    CustomTokenView
+)
 
 app_name = 'api'
 
@@ -32,7 +37,8 @@ router.register('sessions', SessionViewSet)
 router.register('reservations', ReservationViewSet)
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('token/', CustomTokenView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     
