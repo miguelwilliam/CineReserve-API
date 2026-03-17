@@ -7,7 +7,7 @@ class SessionSeat(models.Model):
         RESERVED = "reserved", "Reserved"
         PURCHASED = "purchased", "Purchased"
 
-    session = models.ForeignKey("api.Session", on_delete=models.CASCADE)
+    session = models.ForeignKey("api.Session", on_delete=models.CASCADE, related_name='seats')
     seat = models.ForeignKey("api.Seat", on_delete=models.CASCADE)
 
     status = models.CharField(
