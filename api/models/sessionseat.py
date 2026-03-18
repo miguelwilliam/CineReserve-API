@@ -24,4 +24,10 @@ class SessionSeat(models.Model):
     )
 
     class Meta:
-        unique_together = ("session", "seat")
+        constraints = [
+            models.UniqueConstraint(
+                fields=['session', 'seat'], 
+                name='unique_session_seat',
+                violation_error_message='This session already have this seat.'
+            )
+        ]
