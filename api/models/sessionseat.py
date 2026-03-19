@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from api.models import Reservation
 
 class SessionSeat(models.Model):
 
@@ -51,7 +52,13 @@ class SessionSeat(models.Model):
     
     def release_if_expired(self):
         if self.is_expired():
+            reservation = self.reservation
+
             self.status = self.SeatStatus.AVAILABLE
             self.reservation = None
             self.reserved_at = None
             self.save()
+
+            if reservation:
+                reservation.status = Reservation.ReservationStatus.CANCELLED
+                reservation.save()

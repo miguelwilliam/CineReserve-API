@@ -15,6 +15,19 @@ class ReservationViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+
+        possibly_expired_seats = (
+            SessionSeat.objects
+            .filter(
+                status=SessionSeat.SeatStatus.RESERVED
+            )
+        )
+
+        for seat in possibly_expired_seats:
+            seat.release_if_expired()
+
+        print('Bancos expirados:',len(possibly_expired_seats))
+
         return Reservation.objects.filter(user=user)
  
     @action(detail=False, methods=['post']) # DETAIL = FALSE -> AÇÕES EM LISTAS
