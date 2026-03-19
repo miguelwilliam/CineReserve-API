@@ -8,7 +8,6 @@ class Reservation(models.Model):
         CANCELLED = "cancelled", "Cancelled"
 
     user = models.ForeignKey("api.User", on_delete=models.CASCADE)
-    session = models.ForeignKey("api.Session", on_delete=models.CASCADE)
 
     status = models.CharField(
         max_length=10,
