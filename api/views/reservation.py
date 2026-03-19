@@ -12,6 +12,10 @@ class ReservationViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Reservation.objects.filter(user=user)
  
     @action(detail=False, methods=['post']) # DETAIL = FALSE -> AÇÕES EM LISTAS
     def reserve(self, request):
@@ -46,15 +50,26 @@ class ReservationViewSet(ModelViewSet):
     def checkout(self, request, pk=None):
         reservation = self.get_object()
 
+        if reservation.status != Reservation.ReservationStatus.PENDING:
+            return Response({"error": "Invalid checkout, either not reserved or already expired!"}, status=400)
+        if request.user.id != reservation.user:
+            return Response({"error": "Invalid checkout, the reservation belongs to other user!"}, status=400)
+
+
         with transaction.atomic():
             seats = reservation.sessionseat_set.select_for_update()
 
             for seat in seats:
                 if seat.is_expired():
+                    reservation.status = Reservation.ReservationStatus.CANCELLED
+                    reservation.save()
                     return Response({"error": "Reservation expired"}, status=400)
 
                 seat.status = SessionSeat.SeatStatus.PURCHASED
                 seat.save()
+
+            reservation.status = Reservation.ReservationStatus.CONFIRMED
+            reservation.save()
 
         return Response({"message": "Purchase completed"})
 
@@ -63,7 +78,7 @@ class ReservationViewSet(ModelViewSet):
         reservations = Reservation.objects.filter(
             user=request.user,
             sessionseat__status="purchased",
-            sessionseat__session__start_time__gte=timezone.now()
+            sessionseat__session__start_time__gte=timezone.now() # ARRUMAR ESSA LINHA, NÃO TÁ RETORNANDO DIREITO
         ).distinct()
 
         serializer = self.get_serializer(reservations, many=True)
