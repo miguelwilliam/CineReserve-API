@@ -12,8 +12,8 @@ class ReservationViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-
-    @action(detail=False, methods=['post'])
+ 
+    @action(detail=False, methods=['post']) # DETAIL = FALSE -> AÇÕES EM LISTAS
     def reserve(self, request):
         serializer = ReserveSeatsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -42,7 +42,7 @@ class ReservationViewSet(ModelViewSet):
 
         return Response({"reservation_id": reservation.id})
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post']) # DETAIL = TRUE -> AÇÕES INDIVIDUAIS
     def checkout(self, request, pk=None):
         reservation = self.get_object()
 
@@ -58,7 +58,7 @@ class ReservationViewSet(ModelViewSet):
 
         return Response({"message": "Purchase completed"})
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get']) # DETAIL = FALSE -> AÇÕES EM LISTAS
     def my_tickets(self, request):
         reservations = Reservation.objects.filter(
             user=request.user,
@@ -69,7 +69,7 @@ class ReservationViewSet(ModelViewSet):
         serializer = self.get_serializer(reservations, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get']) # DETAIL = FALSE -> AÇÕES EM LISTAS
     def history(self, request):
         reservations = Reservation.objects.filter(
             user=request.user,
