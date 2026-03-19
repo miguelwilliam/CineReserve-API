@@ -38,11 +38,15 @@ class SessionSeat(models.Model):
     
     def is_expired(self):
         if self.status != self.SeatStatus.RESERVED:
+            print('NÃO ESTÁ COM STATUS RESERVADO! RETORNANDO FALSE')
             return False
         
         if not self.reserved_at:
+            print('NÃO TEM DATA DE RESERVA! RETORNANDO FALSE')
             return False
         
+        print(f'RESERVA:', self.reserved_at, 'MENOR QUE:', timezone.now() - timedelta(minutes=10))
+        print(self.reserved_at < timezone.now() - timedelta(minutes=10))
         return self.reserved_at < timezone.now() - timedelta(minutes=10)
     
     def release_if_expired(self):
