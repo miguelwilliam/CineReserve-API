@@ -29,6 +29,11 @@ class ReservationViewSet(ModelViewSet):
         print('Bancos expirados:',len(possibly_expired_seats))
 
         return Reservation.objects.filter(user=user)
+    
+    def get_serializer_class(self):
+        if self.action == "reserve":
+            return ReserveSeatsSerializer
+        return super().get_serializer_class()
  
     @action(detail=False, methods=['post']) # DETAIL = FALSE -> AÇÕES EM LISTAS
     def reserve(self, request):
@@ -90,8 +95,8 @@ class ReservationViewSet(ModelViewSet):
     def my_tickets(self, request):
         reservations = Reservation.objects.filter(
             user=request.user,
-            sessionseat__status="purchased",
-            sessionseat__session__start_time__gte=timezone.now() # ARRUMAR ESSA LINHA, NÃO TÁ RETORNANDO DIREITO
+            sessionseat__status=SessionSeat.SeatStatus.PURCHASED,
+            sessionseat__session__start_time__gte=timezone.now()
         ).distinct()
 
         serializer = self.get_serializer(reservations, many=True)
