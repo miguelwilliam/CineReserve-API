@@ -65,7 +65,7 @@ class ReservationViewSet(ModelViewSet):
 
         if reservation.status != Reservation.ReservationStatus.PENDING:
             return Response({"error": "Invalid checkout, either not reserved or already expired!"}, status=400)
-        if request.user.id != reservation.user:
+        if request.user.id != reservation.user.id:
             return Response({"error": "Invalid checkout, the reservation belongs to other user!"}, status=400)
 
 
