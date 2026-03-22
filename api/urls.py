@@ -27,6 +27,10 @@ from api.views import (
     RegisterView, 
     CustomTokenView
 )
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
 
 app_name = 'api'
 
@@ -42,6 +46,12 @@ urlpatterns = [
     path('user/token/', CustomTokenView.as_view(), name='token_obtain_pair'),
     path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+    # schema OpenAPI (json)
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # Swagger UI
+    path('docs/', SpectacularSwaggerView.as_view(url_name='api:schema'), name='swagger-ui'),
     
     *router.urls
 ]
