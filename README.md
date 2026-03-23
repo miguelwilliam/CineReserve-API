@@ -210,5 +210,6 @@ Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICEN
 **Miguel William**
 - GitHub: [@miguelwilliam](https://github.com/miguelwilliam)
 
-**Esse README foi feito com ajuda do Github Copilot e está sujeito a erros**
+**Esse README foi feito com ajuda do Github Copilot e está sujeito a erros!**
+
 **Desenvolvido com ❤️ usando Django e Django REST Framework**
